@@ -1,0 +1,6 @@
+entrada: 2456 JMA
+entrada: 3367 BBM
+entrada: 7890 KHH
+placa: 2457 JMB
+placa: 3368 BBN
+placa: 7891 KHI
