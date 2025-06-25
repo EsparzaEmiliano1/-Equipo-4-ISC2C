@@ -1,29 +1,38 @@
 //Proyecto Final. Trolls
 
 #include <iostream>
+#include <cstdio>
 using namespace std;
 
-int calcRomper(int fuerza, int tam);                                                                    //Creamos prototipos de las funciones
-void guardar(FILE* arch, int fuerza, int tam, int romper);
+enum EstadoEslabon { ACTIVO, FIN };                                                                     //Enumeracion lara saber si se continua con la entrada
 
-int main(){                                                                                            //Inicio del programa
-    int fuerza, tam;                                                                                   //Se crean las variables a usar en el codigo
-    const int max = 100;
-    int fuerzas[max];
-    int tams[max];
-    int rompers[max];
+struct Eslabon{                                                                                         //Estructutra del programa con los datos de fuerza, tamaño y
+    int fuerza;                                                                                         //la cantidad a romper asi como su estado
+    int tamano;
+    int romper;
+    EstadoEslabon estado;
+};
+
+int calcRomper(int fuerza, int tam);                                                                    //Prototipos del programa
+void guardar(FILE* arch, const Eslabon& esl);
+
+int main(){                                                                                             //Inicio del programa y abrimos el archivo "registro"
+    const int MAX = 100;                                                                                //Numero maximo de casos posibles a registrar
+    Eslabon* eslabones = new Eslabon[MAX];
     int count = 0;
-    FILE* arch = fopen("registro.txt", "a");                                                          //Abrimos o creamos el archivo de texto
-    if (arch == NULL){
+    FILE* arch = fopen("registro.txt", "a");
+    if (!arch){
         cout << "No se pudo abrir el archivo" << endl;
+        delete[] eslabones;
         return 1;
     }
     while (true){
+        Eslabon esl;
         while (true){
-            cout << "Ingrese la fuerza deseada: ";                                                    //Se ingresa la fuerza usando unicamente numeros enteros
-            cin >> fuerza;                                                                            //ignorando negativos, letras y decimales
+            cout << "Ingrese la fuerza deseada: ";                                                      //Llenamos los datos de fuerza validando solo datos de tipo numero entero
+            cin >> esl.fuerza;
             char extra;
-            if (cin.fail() || fuerza < 0 || (cin.get(extra) && extra != '\n')){
+            if (cin.fail() || esl.fuerza < 0 || (cin.get(extra) && extra != '\n')){
                 cout << "Entrada invalida" << endl;
                 cin.clear();
                 while (cin.get() != '\n');
@@ -31,11 +40,11 @@ int main(){                                                                     
                 break;
             }
         }
-        while (true){                                                                                 //Usamos la misma logica para ingresae el tamaño
-            cout << "Ingrese el tamano de la cadena: ";
-            cin >> tam;
+        while (true){
+            cout << "Ingrese el tamano de la cadena: ";                                                 //Llenamos los datos de tamaño validando solo datos de tipo numero entero
+            cin >> esl.tamano;
             char extra;
-            if (cin.fail() || tam < 0 || (cin.get(extra) && extra != '\n')){
+            if (cin.fail() || esl.tamano < 0 || (cin.get(extra) && extra != '\n')){
                 cout << "Entrada invalida" << endl;
                 cin.clear();
                 while (cin.get() != '\n');
@@ -43,41 +52,42 @@ int main(){                                                                     
                 break;
             }
         }
-        int romper = calcRomper(fuerza, tam);                                                         //Se llaman a las funciones cada que se ingresan ambos datos
-        guardar(arch, fuerza, tam, romper);                                                           //mientras no sea 00, en ese caso se termina el registro
-        if (fuerza == 0 && tam == 0){
+        if (esl.fuerza == 0 && esl.tamano == 0){                                                      //Terminamos las entradas cuando el tamaño y fuerza sean 00
+            esl.estado = FIN;
+            guardar(arch, esl);
             break;
+        } else{                                                                                       //Guardamos los datos dados por el usuario
+            esl.estado = ACTIVO;
+            esl.romper = calcRomper(esl.fuerza, esl.tamano);
+            guardar(arch, esl);
         }
-        if (count < max){
-            fuerzas[count] = fuerza;
-            tams[count] = tam;
-            rompers[count] = romper;
-            count++;
+        if (count < MAX){
+            eslabones[count++] = esl;
         } else {
             cout << "Se alcanzo el limite maximo de casos guardados" << endl;
+            break;
         }
     }
-    fclose(arch);                                                                                      //Muestra la salida en la terminal
-    cout << "Resultados FInales: " <<endl;
+    fclose(arch);                                                                                      //Cierra el archivo e imprime los resultados en la terminal
     for (int i = 0; i < count; i++){
-        cout << "Fuerza: " << fuerzas[i]
-             << " Tamano: " << tams[i]
-             << " Eslabones a romper: " << rompers[i] << endl;
+        cout << "Fuerza: " << eslabones[i].fuerza
+             << " Tamano: " << eslabones[i].tamano
+             << " Eslabones a romper: " << eslabones[i].romper << endl;
     }
+    delete[] eslabones;
     return 0;
 }
 
-int calcRomper(int fuerza, int tam){                                                                   //Se calcula en cuantos segmentos se dividira la cadena con base
-    if (tam <= fuerza) return 0;                                                                       //al tamaño y la fuerza
-    int segmentos = (tam + fuerza - 1) / fuerza;  
-    return segmentos - 1;
+int calcRomper(int fuerza, int tam){                                                                 //Calcula en cuantas partes romper la cadena con base al tamaño y fuerza
+    if (tam <= fuerza) return 0;                                                                      //antes dados por el usuario
+    return 1 + calcRomper(fuerza, tam - fuerza);
 }
 
-
-void guardar(FILE* arch, int fuerza, int tam, int romper){                                             //Guardamos las entradas y salidas en el archivo de texto
-    if (fuerza == 0 && tam == 0) {
+void guardar(FILE* arch, const Eslabon& esl){                                                        //Guarda los datos en el archivo
+    if (esl.estado == FIN) {
         fprintf(arch, "Fin del registro\n");
     } else {
-        fprintf(arch, "Fuerza: %d Tamano: %d Romper: %d\n", fuerza, tam, romper);
+        fprintf(arch, "Fuerza: %d Tamano: %d Romper: %d\n", esl.fuerza, esl.tamano, esl.romper);
     }
 }
+
