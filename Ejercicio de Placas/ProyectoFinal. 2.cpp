@@ -1,81 +1,96 @@
 //Proyecto Final. Placas
 
 #include <iostream>
+#include <cstdio>
 using namespace std;
 
-bool esValida(int num, char pal, char pal2, char pal3);                                                 //Creacion de prototipos
-void siguiente(int& num, char& pal, char& pal2, char& pal3);
+enum EstadoPlaca { VALIDA, INVALIDA };                                                              //Enumeracion que almacena si la placa es valida o no
 
-int main(){                                                                                             //Iniciamos el programa
+struct Placa{                                                                                       //Estructura de la placa que consta de un numero y 3 letras, a su vez se 
+    int num;                                                                                        //agrega su estado 
+    char l1;
+    char l2;
+    char l3;
+    EstadoPlaca estado;
+};
+
+bool esValida(const Placa& p);                                                                      //Prototipos de la funcion
+void avanzarPlaca(Placa& p);
+void avanzarLetra(char& l3, char& l2, char& l1);
+
+int main(){                                                                                         //Inicio del programa con la creacion del archivo "matricula"
     FILE* archivo = fopen("matricula.txt", "w");
     if (!archivo){
         cout << "No se pudo abrir el archivo";
         return 1;
     }
-    const int MAX = 100;                                                                                //Variables a usar en la lectura de las placas
-    int nums[MAX];
-    char pals[MAX], pals2[MAX], pals3[MAX];
+    const int MAX = 1000;
+    Placa* placas = new Placa[MAX];                                                                 //Numero maximo de placas a registrar
     int total = 0;
-    while (true){                                                                                       //Leemos la placa dada por el usuario
-        int num;
-        char pal, pal2, pal3;
-        cout << "Ingrese el numero de placa: ";
-        cin >> num;
+    while (true){
+        Placa p;
+        cout << "Ingrese el numero de placa: ";                                                     //Se solicita al usuario el llenado de la placa 
+        cin >> p.num;
         cout << "Ingrese las letras de la placa (3 mayusculas): ";
-        cin >> pal >> pal2 >> pal3;
-        if (num == 9999 && pal == 'Z' && pal2 == 'Z' && pal3 == 'Z'){                                   //Cuando la placa sea 9999 ZZZ se termina el porgrama
+        cin >> p.l1 >> p.l2 >> p.l3;
+        if (p.num == 9999 && p.l1 == 'Z' && p.l2 == 'Z' && p.l3 == 'Z'){                            //Termina el programa al ingresar la matricula 9999 ZZZ
             break;
         }
-        if (!esValida(num, pal, pal2, pal3)){                                                           //Llamamos a la funcion para validar la entrada permitiendo solo numeros
-            cout << "entrada invalida: ";                                                               //enteros y letras mayusculas
-            printf("%d %c%c%c\n", num, pal, pal2, pal3);
+        p.estado = esValida(p) ? VALIDA : INVALIDA;                                                 //Llama a la funcion esValida que valida los datos ingresados por el usuario
+        if (p.estado == INVALIDA){
+            cout << "entrada invalida: ";
+            printf("%04d %c%c%c\n", p.num, p.l1, p.l2, p.l3);
             continue;
         }
-        fprintf(archivo, "entrada: %04d %c%c%c\n", num, pal, pal2, pal3);                               //Imprimimos la entrada
-        nums[total] = num;
-        pals[total] = pal;
-        pals2[total] = pal2;
-        pals3[total] = pal3;
-        total++;
+        fprintf(archivo, "entrada: %04d %c%c%c\n", p.num, p.l1, p.l2, p.l3);                        //Guarda los datos de la placa dada por el usuario en el archivo
+        placas[total++] = p;
+        if (total == MAX){
+            cout << "Se alcanzo el limite maximo de placas." << endl;
+            break;
+        }
     }
-    for (int i = 0; i < total; i++){                                                                     //Se guarda la matricula y se pasa a la siguiente 
-        int num = nums[i];
-        char pal = pals[i], pal2 = pals2[i], pal3 = pals3[i];
-        siguiente(num, pal, pal2, pal3);
+    for (int i = 0; i < total; i++){                                                                
+        avanzarPlaca(placas[i]);
         char resultado[30];
-        sprintf(resultado, "placa: %04d %c%c%c", num, pal, pal2, pal3);
+        sprintf(resultado, "placa: %04d %c%c%c", placas[i].num, placas[i].l1, placas[i].l2, placas[i].l3);
         cout << resultado << endl;
         fprintf(archivo, "%s\n", resultado);
     }
+    delete[] placas;
     fclose(archivo);
     return 0;
 }
 
-bool esValida(int num, char pal, char pal2, char pal3){                                                 //Funcion que nos permite validar las entradas dadas por el usuario
-    if (num < 0 || num > 9999) return false;
-    if (pal < 'A' || pal > 'Z') return false;
-    if (pal2 < 'A' || pal2 > 'Z') return false;
-    if (pal3 < 'A' || pal3 > 'Z') return false;
+bool esValida(const Placa& p){                                                                      //Funcion para evitar el llenado de forma erroena de la placa 
+    if (p.num < 0 || p.num > 9999) return false;
+    if (p.l1 < 'A' || p.l1 > 'Z') return false;
+    if (p.l2 < 'A' || p.l2 > 'Z') return false;
+    if (p.l3 < 'A' || p.l3 > 'Z') return false;
     return true;
 }
 
-void siguiente(int& num, char& pal, char& pal2, char& pal3){                                            //Funcionm que muestra la matricula siguiente avanzado un numero y una letra
-    num++;                                                                                              // en caso de 9999 seria 0000 y en caso de ZZZ seria AAA
-    pal3++;
-    if (pal3 > 'Z'){
-        pal3 = 'A';
-        pal2++;
-        if (pal2 > 'Z'){
-            pal2 = 'A';
-            if (pal < 'Z'){
-                pal++;
+void avanzarPlaca(Placa& p){                                                                        //Funcion que avanza al siguiente numero
+    p.num++;
+    if (p.num == 10000) p.num = 0;
+    avanzarLetra(p.l3, p.l2, p.l1);
+}
+
+void avanzarLetra(char& l3, char& l2, char& l1){                                                   //Funcion para avanzar de letra de forma recursiva
+    if (l3 < 'Z'){
+        l3++;
+    } else {
+        l3 = 'A';
+        if (l2 < 'Z'){
+            avanzarLetra(l2, l1, l1);
+        } else {
+            l2 = 'A';
+            if (l1 < 'Z'){
+                l1++;
             } else {
-                pal = 'A';
+                l1 = 'A';
             }
         }
     }
-    if (num == 10000){
-        num = 0;
-    }
 }
+
 
