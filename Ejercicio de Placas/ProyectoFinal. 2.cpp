@@ -3,42 +3,42 @@
 #include <iostream>
 using namespace std;
 
-bool esValida(int num, char pal, char pal2, char pal3);
+bool esValida(int num, char pal, char pal2, char pal3);                                                 //Creacion de prototipos
 void siguiente(int& num, char& pal, char& pal2, char& pal3);
 
-int main(){
+int main(){                                                                                             //Iniciamos el programa
     FILE* archivo = fopen("matricula.txt", "w");
     if (!archivo){
         cout << "No se pudo abrir el archivo";
         return 1;
     }
-    const int MAX = 100;
+    const int MAX = 100;                                                                                //Variables a usar en la lectura de las placas
     int nums[MAX];
     char pals[MAX], pals2[MAX], pals3[MAX];
     int total = 0;
-    while (true){
+    while (true){                                                                                       //Leemos la placa dada por el usuario
         int num;
         char pal, pal2, pal3;
         cout << "Ingrese el numero de placa: ";
         cin >> num;
         cout << "Ingrese las letras de la placa (3 mayusculas): ";
         cin >> pal >> pal2 >> pal3;
-        if (num == 9999 && pal == 'Z' && pal2 == 'Z' && pal3 == 'Z'){
+        if (num == 9999 && pal == 'Z' && pal2 == 'Z' && pal3 == 'Z'){                                   //Cuando la placa sea 9999 ZZZ se termina el porgrama
             break;
         }
-        if (!esValida(num, pal, pal2, pal3)){
-            cout << "entrada invalida: ";
+        if (!esValida(num, pal, pal2, pal3)){                                                           //Llamamos a la funcion para validar la entrada permitiendo solo numeros
+            cout << "entrada invalida: ";                                                               //enteros y letras mayusculas
             printf("%d %c%c%c\n", num, pal, pal2, pal3);
             continue;
         }
-        fprintf(archivo, "entrada: %04d %c%c%c\n", num, pal, pal2, pal3);
+        fprintf(archivo, "entrada: %04d %c%c%c\n", num, pal, pal2, pal3);                               //Imprimimos la entrada
         nums[total] = num;
         pals[total] = pal;
         pals2[total] = pal2;
         pals3[total] = pal3;
         total++;
     }
-    for (int i = 0; i < total; i++){
+    for (int i = 0; i < total; i++){                                                                     //Se guarda la matricula y se pasa a la siguiente 
         int num = nums[i];
         char pal = pals[i], pal2 = pals2[i], pal3 = pals3[i];
         siguiente(num, pal, pal2, pal3);
@@ -51,7 +51,7 @@ int main(){
     return 0;
 }
 
-bool esValida(int num, char pal, char pal2, char pal3){
+bool esValida(int num, char pal, char pal2, char pal3){                                                 //Funcion que nos permite validar las entradas dadas por el usuario
     if (num < 0 || num > 9999) return false;
     if (pal < 'A' || pal > 'Z') return false;
     if (pal2 < 'A' || pal2 > 'Z') return false;
@@ -59,8 +59,8 @@ bool esValida(int num, char pal, char pal2, char pal3){
     return true;
 }
 
-void siguiente(int& num, char& pal, char& pal2, char& pal3){
-    num++;
+void siguiente(int& num, char& pal, char& pal2, char& pal3){                                            //Funcionm que muestra la matricula siguiente avanzado un numero y una letra
+    num++;                                                                                              // en caso de 9999 seria 0000 y en caso de ZZZ seria AAA
     pal3++;
     if (pal3 > 'Z'){
         pal3 = 'A';
@@ -78,3 +78,4 @@ void siguiente(int& num, char& pal, char& pal2, char& pal3){
         num = 0;
     }
 }
+
