@@ -1,16 +1,22 @@
 #ifndef ARCHIVO_H  // para usar un archivo de cabecera 
 #define ARCHIVO_H
 
-#include <iostream>
-#include <windows.h>
-#include <cstdlib>
-#include <string>
-#include <ctime>
-#include <fstream>
-#include <cstring>
-#include <conio.h>
-
 using namespace std;
+
+// Funciones de la interfaz de usuario
+void gotoxy(int x, int y);
+void pantallaInicio(int x1, int y1, int x2, int y2);
+void menu(int x1, int y1, int x2, int y2);
+int LeerTextoCentrado(string opc, int x1, int y1, int x2, int y2, int cant, int xEspecial);
+void OpcionUno(int x1, int y1, int x2, int y2);
+void OpcionDos(int x1, int y1, int x2, int y2);
+void OpcionTres(int x1, int y1, int x2, int y2);
+void OpcionCuatro(int x1, int y1, int x2, int y2);
+void OpcionCinco(int x1, int y1, int x2, int y2);
+void OpcionSeis(int x1, int y1, int x2, int y2);
+void OpcionSiete(int x1, int y1, int x2, int y2);
+void SalirOpc8(int x1, int y1, int x2, int y2);
+
 
 // Funciones  Trolls
 void guardar(FILE* arch, int fuerza, int tam, int romper){                                             //Guardamos las entradas y salidas en el archivo de texto
@@ -28,8 +34,6 @@ int calcRomper(int fuerza, int tam) {
     
     return 1 + calcRomper(fuerza, parte_grande) + calcRomper(fuerza, parte_pequena);
 }
-void EjecutarTrolls();
-
 
 
 // Funciones laberinto
@@ -159,7 +163,7 @@ void escribirResultado(const char *nombreArchivo, int suma, int posF, int posC){
 
 
 void imprimirLaberintoVisual(int **M, int n, int posF, int posC) {
-    cout << "\nVisualización del recorrido:\n";
+    cout << "\nVisualizacion del recorrido:\n";
     
     // Imprimir borde superior
     cout << "   +";
@@ -167,32 +171,28 @@ void imprimirLaberintoVisual(int **M, int n, int posF, int posC) {
     cout << "-+" << endl;
     
     for(int i = 0; i < n; i++){
-        // Imprimir número de fila y borde izquierdo
+        // Imprimir numero de fila y borde izquierdo
         printf("%2d |", i);
         
         for(int j = 0; j < n; j++) {
             // Verificar si es parte del camino recorrido
             bool esCamino = (i == j && i <= posF) || (j == n-1 && i <= posF && i <= posF);
             
-            if(i == posF && j == posC) {
-                // Posición final - resaltada
+            if(i == posF && j == posC){
+                // Posicion final - resaltada
                 cout << " P ";
-            } 
-            else if(M[i][j] == 0) {
+            } else if(M[i][j] == 0) {
                 // Chacal (0) - marcado diferente
                 cout << " 0 ";
-            }
-            else if(esCamino) {
+            }else if(esCamino) {
                 // Camino recorrido
                 cout << " X ";
-            } 
-            else {
+            } else {
                 // Valor normal de la matriz
                 printf("%2d ", M[i][j]);
             }
         }
         
-        // Borde derecho
         cout << "|" << endl;
     }
     
@@ -202,13 +202,11 @@ void imprimirLaberintoVisual(int **M, int n, int posF, int posC) {
     cout << "-+" << endl;
     
     // Leyenda
-    cout << "\nLeyenda:\n";
-    cout << "  P: Posición final\n";
+    cout << "\nSignificados:\n";
+    cout << "  P: Posicion final\n";
     cout << "  X: Camino recorrido\n";
     cout << "  0: Chacal encontrado\n";
 }
-int EjecutarLaberinto();  
-
 
 // Funciones cedula valida
 
@@ -257,7 +255,6 @@ bool cedulaValida(int ced[]){
     return verificador == ced[9];
 }
 
-void EjecutarCedulaValida();
 
 // Funciones Placas
 enum EstadoPlaca { VALIDA, INVALIDA };  // Enumeracion que almacena si la placa es valida o no
@@ -298,15 +295,12 @@ void avanzarLetra(char& l3, char& l2, char& l1) {
     }
 }
 
-// Avanza el número y letras de la placa
+// Avanza el numero y letras de la placa
 void avanzarPlaca(Placa& p){
     p.num++;
     if (p.num == 10000) p.num = 0;
     avanzarLetra(p.l3, p.l2, p.l1);
 }
-
-void EjecutarPlacas();
-
 
 // Funciones Saltos
 
@@ -477,10 +471,10 @@ bool validarYProcesarAlturas(const string& line, int numMuros, int*& alturas){
     alturas = new int[numMuros];
     int count = 0;
 
-    char* token = strtok(buffer, " ");    // Primer número
+    char* token = strtok(buffer, " ");    // Primer numero
 
     while(token){
-        // Validar si el token es número positivo
+        // Validar si el token es numero positivo
         bool valido = true;
         for(int i=0; token[i]!='\0'; i++){
             if(!isdigit(token[i])){
@@ -509,7 +503,7 @@ bool validarYProcesarAlturas(const string& line, int numMuros, int*& alturas){
         }
 
         alturas[count++] = valor;
-        token = strtok(nullptr, " ");     // Siguiente número
+        token = strtok(nullptr, " ");     // Siguiente numero
     }
 
     if(count != numMuros){
@@ -521,10 +515,6 @@ bool validarYProcesarAlturas(const string& line, int numMuros, int*& alturas){
     return true;
 }
 
-
-void EjecutarSaltos();
-
-
 // Funciones codigo de barras
 
 struct CodigoPais{
@@ -532,7 +522,7 @@ struct CodigoPais{
     const char* pais;
 };
 
-// Lista de países con sus prefijos
+// Lista de paises con sus prefijos
 CodigoPais paises[] = {
     {"0", "EEUU"},
     {"380", "Bulgaria"},
@@ -547,29 +537,29 @@ CodigoPais paises[] = {
 
 int totalPaises = sizeof(paises)/sizeof(paises[0]);
 
-// Esta función calcula el dígito de control según el estándar EAN
+// Esta funcion calcula el digito de control segun el estandar EAN
 int calcularDigitoControl(const char* codigo, int longitud){
     int suma = 0;
     int factor;
 
-    // Se recorre el código desde el penúltimo dígito hacia atrás
+    // Se recorre el codigo desde el penultimo digito hacia atras
     for(int i=longitud-2, pos=1; i>=0; i--, pos++){
-        int dig = codigo[i]-'0';                         // Se convierte el carácter a número
+        int dig = codigo[i]-'0';                         // Se convierte el caracter a numero
         factor = (pos%2==1) ? 3 : 1;                      // Posiciones impares *3, pares *1
         suma += dig*factor;
     }
 
     int resto = suma%10;
-    return (resto==0) ? 0 : (10-resto);                  // Dígito de control final
+    return (resto==0) ? 0 : (10-resto);                  // Digito de control final
 }
 
-// Busca el país al que pertenece el código EAN
+// Busca el pais al que pertenece el codigo EAN
 const char* obtenerPais(const char* codigo){
-    char prefijo[4];                                     // Prefijo de hasta 3 dígitos
+    char prefijo[4];                                     // Prefijo de hasta 3 digitos
 
     // Se prueba con prefijos de longitud 3, 2 y 1
     for(int len=3; len>=1; len--){
-        strncpy(prefijo, codigo, len);                   // Copia los primeros "len" dígitos
+        strncpy(prefijo, codigo, len);                   // Copia los primeros "len" digitos
         prefijo[len] = '\0';
 
         for(int i=0; i<totalPaises; i++){
@@ -579,25 +569,10 @@ const char* obtenerPais(const char* codigo){
         }
     }
 
-    return "Desconocido";                                // Si no coincide ningún prefijo
+    return "Desconocido";                                // Si no coincide ningun prefijo
 }
 
-void EjecutarCodigoBarras();
 
-
-// Funciones de la interfaz de usuario
-void gotoxy(int x, int y);
-void pantallaInicio(int x1, int y1, int x2, int y2);
-void menu(int x1, int y1, int x2, int y2);
-int LeerTextoCentrado(string opc, int x1, int y1, int x2, int y2, int cant, int xEspecial);
-void OpcionUno(int x1, int y1, int x2, int y2);
-void OpcionDos(int x1, int y1, int x2, int y2);
-void OpcionTres(int x1, int y1, int x2, int y2);
-void OpcionCuatro(int x1, int y1, int x2, int y2);
-void OpcionCinco(int x1, int y1, int x2, int y2);
-void OpcionSeis(int x1, int y1, int x2, int y2);
-void OpcionSiete(int x1, int y1, int x2, int y2);
-void SalirOpc8(int x1, int y1, int x2, int y2);
 
 void BarraDeCarga(int x1, int y1, int x2, int y2){
     
@@ -654,7 +629,6 @@ void temporizador(int x1, int y1, int tiempo){
     }
 }
 
-
 void Esquinas(int x1, int y1, int x2, int y2){
     gotoxy(x1, y1);
     cout << "+";
@@ -666,7 +640,6 @@ void Esquinas(int x1, int y1, int x2, int y2){
     cout << "+";
 }
 
-
 void ImprimirTextoCentrado(string texto, int x1, int y1, int x2, int y2){
     
     int anchoRectangulo = x2 - x1 + 1;
@@ -674,24 +647,6 @@ void ImprimirTextoCentrado(string texto, int x1, int y1, int x2, int y2){
     
     gotoxy(xCentrado, y1);
     cout << texto;
-}
-
-void Compus(int x1, int y1, int x2, int y2){
-
-    for (int x = x1; x <= x2; x++){
-        gotoxy(x, y1);  
-        cout << "-";
-        gotoxy(x, y2);
-        cout << "-";
-    } 
-    for (int y = y1; y <= y2; y++){
-        gotoxy(x1, y);
-        cout << "|";                        
-        gotoxy(x2, y);
-        cout << "|";
-    }
-    Esquinas(x1, y1 , x2, y2);
-    
 }
 
 void gotoxy(int x, int y){
