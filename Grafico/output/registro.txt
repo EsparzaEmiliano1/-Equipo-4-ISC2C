@@ -1,0 +1,24 @@
+Fuerza: 10 Tamano: 8 Romper: 0
+Fuerza: 5 Tamano: 10 Romper: 0
+Fuerza: 1 Tamano: 3 Romper: 1
+Fuerza: 1 Tamano: 4 Romper: 2
+Fin del registro
+Fin del registro
+Fuerza: 1 Tamano: 1 Romper: 0
+Fin del registro
+Fuerza: 10 Tamano: 8 Romper: 0
+Fuerza: 5 Tamano: 10 Romper: 0
+Fuerza: 1 Tamano: 3 Romper: 1
+Fuerza: 1 Tamano: 4 Romper: 2
+Fin del registro
+Fuerza: 10 Tamano: 8 Romper: 0
+Fuerza: 5 Tamano: 10 Romper: 0
+Fuerza: 1 Tamano: 3 Romper: 1
+Fuerza: 1 Tamano: 4 Romper: 2
+Fin del registro
+Fuerza: 10 Tamano: 8 Romper: 0
+Fuerza: 5 Tamano: 10 Romper: 0
+Fuerza: 1 Tamano: 3 Romper: 1
+Fuerza: 1 Tamano: 4 Romper: 2
+Fin del registro
+Fin del registro
