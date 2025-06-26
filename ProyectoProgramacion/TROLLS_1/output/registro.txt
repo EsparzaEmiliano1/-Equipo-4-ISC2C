@@ -1,0 +1,5 @@
+Fuerza: 5 Tamano: 6 Romper: 0
+Fuerza: 4 Tamano: 2 Romper: 0
+Fuerza: 15 Tamano: 9 Romper: 0
+Fuerza: 7 Tamano: 8 Romper: 0
+Fin del registro

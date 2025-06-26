@@ -1,0 +1,6 @@
+entrada: 0123 ABC
+entrada: 0124 AAA
+entrada: 0001 AAA
+placa: 0124 ABD
+placa: 0125 AAB
+placa: 0002 AAB
