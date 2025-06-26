@@ -8,12 +8,13 @@
 #include <conio.h>
 
 #include "archivo.h"
-#include "ejercicios.h" // Make sure this file exists in the same folder as Proyecto.cpp, or provide the correct relative path, e.g. #include "subfolder/ejercicios.h"
+#include "ejercicios.h" 
 
 using namespace std;
 
 
 int main(){
+
     system("mode con: cols=120 lines=40");    
     int x1 = 20, y1 = 0, x2 = 100, y2 = 27;  
     srand(time(0));
@@ -81,7 +82,7 @@ void pantallaInicio(int x1, int y1, int x2, int y2){
                 ImprimirTextoCentrado("Emiliano de Jesus Esparza Ramirez", x1, y1 + 21, x2, y2);
                 break;    
             case 25:
-                ImprimirTextoCentrado("Lunes 24 Junio 2024", x1, y1 + 23, x2, y2);
+                ImprimirTextoCentrado("Jueves 26 Junio 2025", x1, y1 + 23, x2, y2);
                 break;    
             case 26:
                 ImprimirTextoCentrado("Aguscalientes, Ags.", x1, y1 + 24, x2, y2);
@@ -118,7 +119,6 @@ void pantallaInicio(int x1, int y1, int x2, int y2){
         cout << "#";
         CopiadeCopia++;
     }
-
     
     system("cls");
 }
@@ -261,8 +261,7 @@ void menu(int x1, int y1, int x2, int y2){
 void OpcionUno(int x1, int y1, int x2, int y2){
 
     BarraDeCarga(x1, y1, x2, y2);
-  
-    EjecutarTrolls(); // <- esta es la integración real
+    EjecutarTrolls(); 
     system("pause");
     system("cls");
     menu(x1, y1, x2, y2);
@@ -272,25 +271,20 @@ void OpcionUno(int x1, int y1, int x2, int y2){
 
 void OpcionDos(int x1, int y1, int x2, int y2){
 
-        BarraDeCarga(x1, y1, x2, y2);
-
-
+    BarraDeCarga(x1, y1, x2, y2);
     EjecutarLaberinto();
     system("pause");
     system("cls");
-
     menu(x1, y1, x2, y2);
 
 }
 
 void OpcionTres(int x1, int y1, int x2, int y2){
 
-        BarraDeCarga(x1, y1, x2, y2);
-
+    BarraDeCarga(x1, y1, x2, y2);
     EjecutarCedulaValida();
     system("pause");
     system("cls");
-
     menu(x1, y1, x2, y2);
  
 
@@ -302,7 +296,7 @@ void OpcionCuatro(int x1, int y1, int x2, int y2){
     EjecutarPlacas();
     system("pause");
     system("cls");
-
+    fflush(stdin);
     menu(x1, y1, x2, y2);
  
 }
@@ -310,13 +304,9 @@ void OpcionCuatro(int x1, int y1, int x2, int y2){
 void OpcionCinco(int x1, int y1, int x2, int y2){
 
     BarraDeCarga(x1, y1, x2, y2);
-
-
-
     EjecutarSaltos();
     system("pause");
     system("cls");
-
     menu(x1, y1, x2, y2);
 
 }
@@ -324,13 +314,9 @@ void OpcionCinco(int x1, int y1, int x2, int y2){
 void OpcionSeis(int x1, int y1, int x2, int y2){
 
     BarraDeCarga(x1, y1, x2, y2);
-
-
-
     EjecutarCodigoBarras();
     system("pause");
     system("cls");
-
     menu(x1, y1, x2, y2);
 
 }
